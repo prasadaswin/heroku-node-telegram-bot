@@ -1,3 +1,5 @@
+process.env.NTBA_FIX_319 = 1;
+
 const token = process.env.TOKEN;
 const https = require("https");
 const date = require('date-and-time');
@@ -8,7 +10,7 @@ let bot;
 
 
 // globals
-const groupChatID='-515906219';
+const groupChatID='-1001490277857';
 let cowinLink='https://www.cowin.gov.in/home';
 
 if (process.env.NODE_ENV === 'production') {
@@ -23,7 +25,6 @@ if (process.env.NODE_ENV === 'production') {
 //test//
 bot.on('message', (msg) => {
   const chatId = msg.chat.id;
-
   // send a message to the chat acknowledging receipt of their message
   bot.sendMessage(chatId, 'Received your message');
 });
@@ -148,7 +149,7 @@ function test(x, pinFlag = false, callback) {
 
   https.get(aliasFunc(x), (response) => {
 
-    console.log('statusCode:', response.statusCode);
+    // console.log('statusCode:', response.statusCode);
     //console.log('headers:', res.headers);
     if (response.statusCode === 400) {
       callback(true, response);
@@ -162,12 +163,12 @@ function test(x, pinFlag = false, callback) {
     let finalVal;
     response.on('end', () => {
       finalVal = JSON.parse(data);
-      console.log(finalVal);
+      // console.log(finalVal);
       callback(null, finalVal);
     });
 
   }).on('error', (e) => {
-    console.error(e);
+    // console.error(e);
     callback(true, e)
   });
 
@@ -180,10 +181,11 @@ setInterval(function() {
   https.get(getAllDistrictSlots(), (response) => {
 
     console.log('statusCode:', response.statusCode);
-    if (response.statusCode === 400) {
+    if (response.statusCode !== 200) {
       console.error(response.statusCode);
-      return;
+
     }
+    else if (response.statusCode===200) {
     let data = '';
     response.on('data', (chunk) => {
       data += chunk;
@@ -197,12 +199,10 @@ setInterval(function() {
          { clearInterval(this);
            succes(finalVal);}
     });
-
+}
   }).on('error', (e) => {
     console.error(e);
   });
-
-
 
 }, 60000); //every 1 min
 
