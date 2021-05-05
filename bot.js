@@ -81,7 +81,7 @@ function botErromsg(n){
 function botMain(district_id,pinFlag){
   let finalString='';
   test(district_id,pinFlag,(err,val)=>{
-      if(err){  console.log(err); finalString=val.error;  }
+      if(err){ console.log(err); finalString="PinCode Invalid";  }
 
       else {
 
@@ -138,13 +138,19 @@ https.get(aliasFunc(x),(response) => {
 
   console.log('statusCode:', response.statusCode);
   //console.log('headers:', res.headers);
+ if(response.statusCode===400)
+ {
+     callback(true,response);
+     return;
+ }
+
    let data='';
   response.on('data', (chunk) => {
       data+=chunk;});
    let finalVal;
   response.on('end',() => {
      finalVal=JSON.parse(data);
-    // console.log(finalVal);
+     console.log(finalVal);
      callback(null,finalVal);
   });
 
