@@ -151,11 +151,11 @@ function test(x, pinFlag = false, callback) {
      console.log(response);
      console.log('statusCode:', response.statusCode);
     //console.log('headers:', res.headers);
-    if (response.statusCode !== 200) {
-      callback(true, response);
-    //  return;
-    }
-  else if (response.statusCode===200) {
+  //   if (response.statusCode !== 200) {
+  //     callback(true, response);
+  //   //  return;
+  //   }
+  // else if (response.statusCode===200) {
     let data = '';
     response.on('data', (chunk) => {
       data += chunk;
@@ -164,9 +164,10 @@ function test(x, pinFlag = false, callback) {
     response.on('end', () => {
       finalVal = JSON.parse(data);
       // console.log(finalVal);
-      callback(null, finalVal);
+      if(response.statusCode===200)
+        callback(null, finalVal);
     });
-  }
+  //}
 
   }).on('error', (e) => {
     // console.error(e);
