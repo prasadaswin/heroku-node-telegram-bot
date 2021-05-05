@@ -148,7 +148,7 @@ function test(x, pinFlag = false, callback) {
   let aliasFunc = pinFlag ? getByPin : getAllDistrictSlots;
 
   https.get(aliasFunc(x), (response) => {
-     //console.log(response);
+     console.log(response);
      console.log('statusCode:', response.statusCode);
     //console.log('headers:', res.headers);
     if (response.statusCode !== 200) {
