@@ -23,7 +23,7 @@ console.log(tommorowsDate);
 
 bot.onText(/\/help/,(msg)=>{
    const chatID = msg.chat.id;
-    let helpText="Type /slots <x> ; \n 'x' can be a district name/pincode. eg: /slots kannur reutrns details of vac center at Kannur. if 'x' is not entered the slots for defualt Kozhikode will be fetched."
+    let helpText="Type /slots <x> ; \n 'x' can be a district name[Kerala]/pincode[Any]. eg: /slots kannur reutrns details of vac center at Kannur. if 'x' is not entered the slots for defualt Kozhikode will be fetched.Fetched Slots are for the next Day"
     bot.sendMessage(chatID,helpText);
 
 });
