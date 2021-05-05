@@ -6,6 +6,7 @@ const kerala_ids = require('./kerala_dist_ids.json');
 const Bot = require('node-telegram-bot-api');
 let bot;
 
+
 // globals
 const groupChatID='-515906219';
 let cowinLink='https://www.cowin.gov.in/home';
@@ -18,6 +19,18 @@ if (process.env.NODE_ENV === 'production') {
     polling: true
   });
 };
+
+//test//
+bot.on('message', (msg) => {
+  const chatId = msg.chat.id;
+
+  // send a message to the chat acknowledging receipt of their message
+  bot.sendMessage(chatId, 'Received your message');
+});
+//test//
+
+
+
 
 let todaysDate = new Date();
 let tommorowsDate = date.addDays(todaysDate, 1);
@@ -210,22 +223,3 @@ function succes(finalVal){
 
 
 module.exports = bot;
-
-
-
-
-
-
-
-
-
-// console.log('Bot server started in the ' + process.env.NODE_ENV + ' mode');
-//
-// bot.on('message', (msg) => {
-//   const name = msg.from.first_name;
-//   bot.sendMessage(msg.chat.id, 'another, ' + name + '!').then(() => {
-//     // reply sent!
-//   });
-// });
-//
-// module.exports = bot;
