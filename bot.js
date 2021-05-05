@@ -151,11 +151,11 @@ function test(x, pinFlag = false, callback) {
 
     // console.log('statusCode:', response.statusCode);
     //console.log('headers:', res.headers);
-    if (response.statusCode === 400) {
+    if (response.statusCode !== 200) {
       callback(true, response);
       return;
     }
-
+  else if (response.statusCode===200) {
     let data = '';
     response.on('data', (chunk) => {
       data += chunk;
@@ -166,6 +166,7 @@ function test(x, pinFlag = false, callback) {
       // console.log(finalVal);
       callback(null, finalVal);
     });
+  }
 
   }).on('error', (e) => {
     // console.error(e);
@@ -175,9 +176,9 @@ function test(x, pinFlag = false, callback) {
 };
 
 // scrapper
-//let i=0;
+let i=0;
 setInterval(function() {
- //console.log(i++);
+ console.log(i++);
   https.get(getAllDistrictSlots(), (response) => {
 
     console.log('statusCode:', response.statusCode);
