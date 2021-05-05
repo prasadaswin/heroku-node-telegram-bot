@@ -148,12 +148,12 @@ function test(x, pinFlag = false, callback) {
   let aliasFunc = pinFlag ? getByPin : getAllDistrictSlots;
 
   https.get(aliasFunc(x), (response) => {
-
-    // console.log('statusCode:', response.statusCode);
+     //console.log(response);
+     console.log('statusCode:', response.statusCode);
     //console.log('headers:', res.headers);
     if (response.statusCode !== 200) {
       callback(true, response);
-      return;
+    //  return;
     }
   else if (response.statusCode===200) {
     let data = '';
@@ -184,7 +184,6 @@ setInterval(function() {
     console.log('statusCode:', response.statusCode);
     if (response.statusCode !== 200) {
       console.error(response.statusCode);
-
     }
     else if (response.statusCode===200) {
     let data = '';
