@@ -4,7 +4,11 @@ const token = process.env.TOKEN;
 const https = require("https");
 const date = require('date-and-time');
 const kerala_ids = require('./kerala_dist_ids.json');
-//console.log(kerala_ids);
+//
+const axios=require('axios');
+const querystring=require('querystring');
+
+
 const Bot = require('node-telegram-bot-api');
 let bot;
 
@@ -23,11 +27,11 @@ if (process.env.NODE_ENV === 'production') {
 };
 
 //test//
-bot.on('message', (msg) => {
-  const chatId = msg.chat.id;
-  // send a message to the chat acknowledging receipt of their message
-  bot.sendMessage(chatId, 'Received your message');
-});
+// bot.on('message', (msg) => {
+//   const chatId = msg.chat.id;
+//   // send a message to the chat acknowledging receipt of their message
+//   bot.sendMessage(chatId, 'Received your message from server');
+// });
 //test//
 
 
@@ -130,7 +134,7 @@ bot.on("polling_error", (err) => console.log(err));
 
 
 
-const byPin = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByPin?pincode=673612&date=05-05-2021";
+const byPin = 'https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByPin';
 const byDistrictID = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByDistrict?district_id=305&date=05-05-2021";
 const accessToken = "1787534913:AAEaQ0nIdQ5t9YJs6uTtVFtyus7WpLSwoEI";
 
@@ -147,65 +151,54 @@ const getAllDistrictSlots = function(id = 305) {
 function test(x, pinFlag = false, callback) {
   let aliasFunc = pinFlag ? getByPin : getAllDistrictSlots;
 
-  https.get(aliasFunc(x), (response) => {
-     console.log(response);
-     console.log('statusCode:', response.statusCode);
-    //console.log('headers:', res.headers);
-  //   if (response.statusCode !== 200) {
-  //     callback(true, response);
-  //   //  return;
-  //   }
-  // else if (response.statusCode===200) {
-    let data = '';
-    response.on('data', (chunk) => {
-      data += chunk;
-    });
-    let finalVal;
-    response.on('end', () => {
-      finalVal = JSON.parse(data);
-      // console.log(finalVal);
-      if(response.statusCode===200)
-        callback(null, finalVal);
-    });
-  //}
+   axios.get(byPin,{params:{pincode:'673612',date:'07-05-2021'}})
+     .then(response => {
+           console.log(response)
+           callback(null,response);
 
-  }).on('error', (e) => {
-    // console.error(e);
-    callback(true, e)
-  });
+     }).catch(error=>{
+       // console.log("here")
+        console.log(error.response);
+     })
 
 };
 
-// scrapper
-let i=0;
-setInterval(function() {
- console.log(i++);
-  https.get(getAllDistrictSlots(), (response) => {
-
-    console.log('statusCode:', response.statusCode);
-    if (response.statusCode !== 200) {
-      console.error(response.statusCode);
-    }
-    else if (response.statusCode===200) {
-    let data = '';
-    response.on('data', (chunk) => {
-      data += chunk;
-    });
-    let finalVal;
-    response.on('end', () => {
-      finalVal = JSON.parse(data);
-      console.log(finalVal);
-      if(finalVal.sessions.length!==0)
-
-         { clearInterval(this);
-           succes(finalVal);}
-    });
+test(1,false, (response) => {
+  console.log(response)
 }
-  }).on('error', (e) => {
-    console.error(e);
-  });
 
-}, 60000); //every 1 min
+);
+// scrapper
+// let i=0;
+// setInterval(function() {
+//  console.log(i++);
+//   https.get(getAllDistrictSlots(), (response) => {
+//
+//     // console.log('statusCode:', response.statusCode);
+//     // if (response.statusCode !== 200) {
+//     //   console.error(response.statusCode);
+//     // }
+//     // else if (response.statusCode===200) {
+//     let data = '';
+//     response.on('data', (chunk) => {
+//       data += chunk;
+//     });
+//     let finalVal;
+//     response.on('end', () => {
+//       finalVal = JSON.parse(data);
+//       console.log(finalVal);
+//       console.log(response.statusCode);
+//       if(finalVal.sessions.length!==0)
+//
+//          { clearInterval(this);
+//            succes(finalVal);}
+//     });
+// // }
+//   }).on('error', (e) => {
+//     console.error(e);
+//   });
+//
+// }, 60000); //every 1 min
 
 
 function succes(finalVal){
