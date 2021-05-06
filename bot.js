@@ -26,14 +26,13 @@ if (process.env.NODE_ENV === 'production') {
   });
 };
 
-//test//
-// bot.on('message', (msg) => {
-//   const chatId = msg.chat.id;
-//   // send a message to the chat acknowledging receipt of their message
-//   bot.sendMessage(chatId, 'Received your message from server');
-// });
-//test//
-
+// test//
+bot.on('message', (msg) => {
+  const chatId = msg.chat.id;
+  // send a message to the chat acknowledging receipt of their message
+  bot.sendMessage(chatId, 'Received your message from server');
+});
+// test//
 
 
 
@@ -102,8 +101,8 @@ bot.onText(/\/slots/, (msg, match) => {
     let finalString = '';
     test(district_id, pinFlag, (err, val) => {
       if (err) {
-        console.log(err);
-        finalString = "PinCode Invalid";
+        console.log(val);
+        finalString = val.error;
       } else {
 
         let arr = val.sessions;
@@ -148,57 +147,69 @@ const getAllDistrictSlots = function(id = 305) {
   return api;
 }
 
-function test(x, pinFlag = false, callback) {
-  let aliasFunc = pinFlag ? getByPin : getAllDistrictSlots;
+// function test(x, pinFlag = false, callback) {
+//
+//
+// };
+//
+// test( (response) => {
+//   console.log(response)
+// });
 
-   axios.get(byPin,{params:{pincode:'673612',date:'07-05-2021'}})
-     .then(response => {
-           console.log(response)
-           callback(null,response);
+function test(x,pinFlag=false,callback){
+let aliasFunc = pinFlag ? getByPin : getAllDistrictSlots;
 
-     }).catch(error=>{
-       // console.log("here")
-        console.log(error.response);
-     })
+axios.get(aliasFunc(x),
 
+{
+ headers:{
+   'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36',
+    'cache-control':'no-cache',
+    'scheme':'https'
+ }
+
+})
+  .then(response => {
+    console.log("here")
+        console.log(response);
+        callback(null,response.data);
+
+  }).catch(error=>{
+     console.log(error);
+    callback(true,error.response.data);
+  })
 };
 
-test(1,false, (response) => {
-  console.log(response)
-}
 
-);
-// scrapper
-// let i=0;
-// setInterval(function() {
-//  console.log(i++);
-//   https.get(getAllDistrictSlots(), (response) => {
-//
-//     // console.log('statusCode:', response.statusCode);
-//     // if (response.statusCode !== 200) {
-//     //   console.error(response.statusCode);
-//     // }
-//     // else if (response.statusCode===200) {
-//     let data = '';
-//     response.on('data', (chunk) => {
-//       data += chunk;
-//     });
-//     let finalVal;
-//     response.on('end', () => {
-//       finalVal = JSON.parse(data);
-//       console.log(finalVal);
-//       console.log(response.statusCode);
-//       if(finalVal.sessions.length!==0)
-//
-//          { clearInterval(this);
-//            succes(finalVal);}
-//     });
-// // }
-//   }).on('error', (e) => {
-//     console.error(e);
-//   });
-//
-// }, 60000); //every 1 min
+
+//scrapper
+let i=0;
+setInterval(function() {
+ console.log(i++);
+ axios.get(getAllDistrictSlots(),
+ {
+  headers:{
+    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36',
+     'cache-control':'no-cache',
+     'scheme':'https'
+  }
+
+ })
+   .then(response => {
+      let finalVal=response.data;
+      console.log(finalVal);
+      console.log(response.status);
+      if(finalVal.sessions.length!==0)
+
+         { clearInterval(this);
+           succes(finalVal);}
+
+}).catch('error', (e) => {
+    console.error(e);
+  });
+
+}, 30000); //every 30sec
+
 
 
 function succes(finalVal){
